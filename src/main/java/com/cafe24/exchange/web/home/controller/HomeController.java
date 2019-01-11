@@ -12,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 public class HomeController {
 
-    private final CommonProperties commonProperties;
+
     /**
      * index page
      * @return ModelAndView
@@ -20,9 +20,9 @@ public class HomeController {
     @GetMapping("/")
     public ModelAndView index(){
         log.info("index");
-        log.info("api key : {}", commonProperties.getApiAccessKey());
+
         ModelAndView mav = new ModelAndView();
-        mav.setViewName("currency/index");
+        mav.setViewName("index");
         return mav;
     }
 }
