@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}" xmlns:th="http://www.thymeleaf.org">
-    <main  role="main" class="inner cover" layout:fragment="content" >
+<div layout:fragment="content">
+    <main  role="main" class="inner cover"  >
         <h1 class="cover-heading">Cover your page.</h1>
         <p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.</p>
         <p class="lead">
@@ -9,8 +10,9 @@
     </main>
     <script type="text/javascript">
         $(document).ready(function() {
-            $("#menu").Children().find('a').removeClass('active');
+            $("#menu").find('a').removeClass('active');
             $("#menu01").addClass('active');
-        }
+        });
     </script>
+</div>
 </html>
