@@ -19,4 +19,8 @@ public class CommonProperties {
     private String apiUrl;
     private String apiAccessKey;
     private String currencies;
+    private int restTemplateReadTimeout;
+    private int restTemplateConnectTimeout;
+    private int httpClientMaxConnectTotal;
+    private int httpClientMaxConnectPerRoute;
 }
