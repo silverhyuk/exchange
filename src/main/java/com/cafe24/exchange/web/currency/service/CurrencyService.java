@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -26,6 +28,7 @@ public class CurrencyService {
         CurrencyVO currencyVO = getApi();
 
         if( currencyVO.isSuccess() == true ) {
+            changeQuotes(currencyVO);
             currencyRepository.setCurrencyVO(currencyVO);
             retVal = true;
         }
@@ -54,5 +57,20 @@ public class CurrencyService {
         }
 
         return currencyVO;
+    }
+
+    private void changeQuotes(CurrencyVO currencyVO) {
+        Map<String, Double> quotes = currencyVO.getQuotes();
+        Map<String, Double> newQuotes = new HashMap<>();
+        String source = currencyVO.getSource();
+        quotes.forEach((k, v)->{
+            if(k.length() == 6 && k.contains(source) == true) {
+                String newKey = k.substring(3);
+                newQuotes.put(newKey, v);
+            }else{
+                log.warn("Wrong quotes key=>value : {} => {}", k, v);
+            }
+        });
+        currencyVO.setQuotes(newQuotes);
     }
 }

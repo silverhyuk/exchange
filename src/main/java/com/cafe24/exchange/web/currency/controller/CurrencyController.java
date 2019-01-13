@@ -6,6 +6,7 @@ import com.cafe24.exchange.web.currency.vo.CurrencyVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/currency")
 public class CurrencyController {
 
     private final CurrencyService currencyService;
@@ -21,7 +23,7 @@ public class CurrencyController {
      * index page
      * @return ModelAndView
      */
-    @GetMapping("/currency")
+    @GetMapping("")
     public ModelAndView index(){
         log.info("index");
 
@@ -31,7 +33,7 @@ public class CurrencyController {
 
         if(currencyVO.isSuccess() == true){
             log.info(currencyVO.toString());
-            mav.addObject("vo", currencyVO.getQuotes());
+            mav.addObject("vo", currencyVO);
         }
         mav.setViewName("currency/index");
         return mav;
