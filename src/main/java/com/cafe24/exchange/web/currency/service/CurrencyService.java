@@ -1,15 +1,20 @@
 package com.cafe24.exchange.web.currency.service;
 
 import com.cafe24.exchange.common.properties.CommonProperties;
-import com.cafe24.exchange.web.currency.repogitory.CurrencyRepository;
+//import com.cafe24.exchange.web.currency.repogitory.CurrencyRepository;
+import com.cafe24.exchange.domain.currency.Currency;
+import com.cafe24.exchange.domain.currency.CurrencyRepository;
 import com.cafe24.exchange.web.currency.vo.CurrencyVO;
 import com.google.gson.Gson;
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,20 +30,39 @@ public class CurrencyService {
 
         boolean retVal = false;
 
-        CurrencyVO currencyVO = getApi();
+        CurrencyVO vo = getApi();
 
-        if( currencyVO.isSuccess() == true ) {
-            changeQuotes(currencyVO);
-            currencyRepository.setCurrencyVO(currencyVO);
+        if( vo.isSuccess() ) {
+            changeQuotes(vo);
+            Map<String, Double> quotes =  vo.getQuotes();
+            quotes.forEach((k, v)->{
+                Currency currency = new Currency();
+                currency.setNation(k);
+                currency.setExchangeRate(v);
+                currency.setSource(vo.getSource());
+                Optional<Currency> optionalCurrency =  currencyRepository.findByNationAndSource(k, vo.getSource());
+                optionalCurrency.orElse(currencyRepository.save(currency));
+            });
+
             retVal = true;
         }
         return retVal;
     }
 
-    public CurrencyVO getCurrencyData(){
-        CurrencyVO currencyVO = Optional.ofNullable(currencyRepository.getCurrencyVO()).orElse(new CurrencyVO());
+    public CurrencyVO getCurrencyList() throws Exception {
+        List<Currency> currencyList = (List<Currency>) Optional.ofNullable(currencyRepository.findAll()).orElseThrow(Exception::new);
+        CurrencyVO  vo = new CurrencyVO();
+        for(Currency currency : currencyList){
+            Map<String, Double> map = vo.getQuotes();
+            map.put(currency.getNation(), currency.getExchangeRate());
+        }
+        return vo;
+    }
 
-        return currencyVO;
+    public Currency getCurrencyData(String nation)throws Exception {
+        Optional<Currency> optionalCurrency = currencyRepository.findByNation(nation);
+        Currency currency = optionalCurrency.orElseThrow(Exception::new);
+        return currency;
     }
 
     private CurrencyVO getApi(){

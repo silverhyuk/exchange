@@ -9,11 +9,12 @@
                 </div>
                 <div class="form-group">
                     <label for="sendNation">송금국가</label>
-                    <input type="text" class="form-control" id="sendNation" th:value="${vo.source}" disabled>
+                    <input type="text" class="form-control" id="sendNation" th:value="${vo.source}" readonly disabled>
                 </div>
                 <div class="form-group">
                     <label for="receiptNation">수취국가</label>
                     <select class="form-control" id="receiptNation">
+                        <option value="">선택하기</option>
                         <option th:each="quote : ${vo.quotes}"
                                 th:value="${quote.value}"
                                 th:utext="${quote.key}"/>
@@ -21,15 +22,15 @@
                 </div>
                 <div class="form-group">
                     <label for="exchangeRate">환율</label>
-                    <input type="text" class="form-control" id="exchangeRate" value="" disabled>
+                    <input type="text" class="form-control" id="exchangeRate" value="" readonly disabled>
                 </div>
 
                 <div class="form-group">
-                    <label for="sendMoney">송금액</label>
-                    <input type="text" class="form-control" id="sendMoney" value=""> USD
+                    <label for="sendMoney" th:text="'송금액(' +${vo.source} + ')'"></label>
+                    <input type="text" class="form-control" id="sendMoney" value="">
                 </div>
                 <p class="lead">
-                    <a href="#" class="btn btn-lg btn-secondary">Submit</a>
+                    <button href="#" class="btn btn-lg btn-secondary">Submit</button>
                 </p>
             </form>
 
@@ -38,7 +39,12 @@
         $(document).ready(function() {
             $("#menu").find('a').removeClass('active');
             $("#menu02").addClass('active');
+            $("#receiptNation").on('change', function(){
+                $("#exchangeRate").val($("#receiptNation").val());
+            });
+
         });
+
     </script>
 </div>
 </html>
