@@ -13,10 +13,7 @@ import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -40,6 +37,8 @@ public class CurrencyService {
                 currency.setNation(k);
                 currency.setExchangeRate(v);
                 currency.setSource(vo.getSource());
+                currency.setRegDateTime(new Date());
+                currency.setLastModifiedDateTime(new Date());
                 Optional<Currency> optionalCurrency =  currencyRepository.findByNationAndSource(k, vo.getSource());
                 optionalCurrency.orElse(currencyRepository.save(currency));
             });
@@ -56,6 +55,8 @@ public class CurrencyService {
             Map<String, Double> map = vo.getQuotes();
             map.put(currency.getNation(), currency.getExchangeRate());
         }
+        vo.setSource(currencyList.get(0).getSource());
+        vo.setSuccess(true);
         return vo;
     }
 

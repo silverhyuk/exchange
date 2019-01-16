@@ -30,7 +30,7 @@
                     <input type="text" class="form-control" id="sendMoney" value="">
                 </div>
                 <p class="lead">
-                    <button href="#" class="btn btn-lg btn-secondary">Submit</button>
+                    <button id="submitBtn" class="btn btn-lg btn-secondary">Submit</button>
                 </p>
             </form>
 
@@ -41,6 +41,10 @@
             $("#menu02").addClass('active');
             $("#receiptNation").on('change', function(){
                 $("#exchangeRate").val($("#receiptNation").val());
+            });
+
+            $("#submitBtn").on('click', function(){
+                alert("submit button clicked!!");
             });
 
         });
